@@ -35,19 +35,21 @@ use mod_customcert\export\contracts\i_template_import_logger;
 use mod_customcert\export\contracts\i_template_file_manager;
 use mod_customcert\export\contracts\import_form;
 
+$context = context_system::instance();
+
 require_login();
+require_capability('mod/customcert:manage', $context);
 
-$contextid = required_param('context_id', PARAM_INT);
-
-$context = context::instance_by_id($contextid);
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/mod/customcert/pages/import.php'));
-$PAGE->set_title(get_string('import'));
-$PAGE->set_heading(get_string('import'));
+$PAGE->set_title(get_string('importtemplate', 'customcert'));
+$PAGE->set_heading(get_string('importtemplate', 'customcert'));
 
 $mform = new import_form();
 
-if ($fromform = $mform->get_data()) {
+if ($mform->is_cancelled()) {
+    redirect(new moodle_url('/mod/customcert/manage_templates.php'));
+} else if ($fromform = $mform->get_data()) {
     $zipstring = $mform->get_file_content('backup');
     $tempdir = make_temp_directory('customcert_import/' . uniqid(more_entropy: true));
     $zippath = "$tempdir/import.zip";
@@ -58,6 +60,7 @@ if ($fromform = $mform->get_data()) {
 
     di::get(i_template_import_logger::class)->print_notification();
     notification::success("Successfully imported template");
+    redirect(new moodle_url('/mod/customcert/manage_templates.php'));
 }
 
 echo $OUTPUT->header();
