@@ -121,6 +121,10 @@ $table->define_baseurl($pageurl);
 
 echo $OUTPUT->header();
 $table->out($perpage, false);
-$url = new moodle_url('/mod/customcert/edit.php?contextid=' . $contextid);
-echo $OUTPUT->single_button($url, get_string('createtemplate', 'customcert'), 'get');
+$importurl = new moodle_url('/mod/customcert/pages/import.php');
+$createurl = new moodle_url('/mod/customcert/edit.php', ['contextid' => $contextid]);
+echo html_writer::div(
+    $OUTPUT->single_button($importurl, get_string('importtemplate', 'customcert')) .
+    $OUTPUT->single_button($createurl, get_string('createtemplate', 'customcert'), 'get')
+);
 echo $OUTPUT->footer();

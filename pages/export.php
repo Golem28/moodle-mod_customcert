@@ -32,9 +32,12 @@ require_once(__DIR__ . '/../../../config.php');
 use core\di;
 use mod_customcert\export\contracts\i_template_file_manager;
 
-require_login();
-
 $tid = required_param("tid", PARAM_INT);
+$contextid = $DB->get_field('customcert_templates', 'contextid', ["id" => $tid]);
+$context = context::instance_by_id($contextid);
+
+require_login();
+require_capability('mod/customcert:manage', $context);
 
 $exporter = di::get(i_template_file_manager::class);
 $zippath = $exporter->export($tid);

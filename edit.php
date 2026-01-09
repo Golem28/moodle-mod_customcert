@@ -252,7 +252,7 @@ if ($tid && $context->contextlevel == CONTEXT_MODULE) {
     $loadtemplateurl = new moodle_url('/mod/customcert/load_template.php', ['tid' => $tid]);
     $loadtemplateform = new \mod_customcert\load_template_form(
         $loadtemplateurl,
-        ['context' => $context],
+        ['context' => $context, 'tid' => $tid],
         'post',
         '',
         ['id' => 'loadtemplateform']
