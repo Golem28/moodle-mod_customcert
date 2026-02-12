@@ -24,6 +24,8 @@
 
 namespace mod_customcert;
 
+use moodle_url;
+
 defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
@@ -124,7 +126,18 @@ class manage_templates_table extends \table_sql {
             ['class' => 'action-icon delete-icon']
         );
 
-        return $editicon . $duplicateicon . $deleteicon;
+        $exportlink = new moodle_url(
+            '/mod/customcert/pages/export.php',
+            ['tid' => $template->id]
+        );
+        $exporticon = $OUTPUT->action_icon(
+            $exportlink,
+            new \pix_icon('t/download', get_string('download')),
+            null,
+            ['class' => 'action-icon export-icon']
+        );
+
+        return $editicon . $exporticon . $duplicateicon . $deleteicon;
     }
 
     /**

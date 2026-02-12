@@ -46,17 +46,25 @@ class load_template_form extends \moodleform {
 
         // Get the context.
         $context = $this->_customdata['context'];
+        $tid = $this->_customdata['tid'];
         $syscontext = \context_system::instance();
 
         $mform->addElement('header', 'loadtemplateheader', get_string('loadtemplate', 'customcert'));
 
-        // Display a link to the manage templates page.
+        // Display a link to the manage templates page and save as a template.
         if ($context->contextlevel != CONTEXT_SYSTEM && has_capability('mod/customcert:manage', $syscontext)) {
             $link = \html_writer::link(
                 new \moodle_url('/mod/customcert/manage_templates.php'),
                 get_string('managetemplates', 'customcert')
             );
             $mform->addElement('static', 'managetemplates', '', $link);
+
+            $exportlink = \html_writer::link(
+                new \moodle_url('/mod/customcert/pages/export.php', ['tid' => $tid]),
+                get_string('exporttemplate', 'customcert'),
+                ['class' => 'btn btn-primary']
+            );
+            $mform->addElement('static', 'exporttemplate', '', $exportlink);
         }
 
         $arrtemplates = $DB->get_records_menu('customcert_templates', ['contextid' => $syscontext->id], 'name ASC', 'id, name');
