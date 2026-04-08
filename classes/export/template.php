@@ -76,8 +76,10 @@ class template {
         }
 
         $db = di::get(moodle_database::class);
-        $db->transactions_forbidden();
-        $transaction = $db->start_delegated_transaction();
+        $intransaction = $db->is_transaction_started();
+        if (!$intransaction) {
+            $transaction = $db->start_delegated_transaction();
+        }
 
         $tid = $db->insert_record(static::$dbtable, [
             'name' => $templatedata['name'],
@@ -90,7 +92,9 @@ class template {
         foreach ($templatedata['pages'] as $pagedata) {
             $page->import($tid, $pagedata);
         }
-        $transaction->allow_commit();
+        if (!$intransaction) {
+            $transaction->allow_commit();
+        }
     }
 
     /**
