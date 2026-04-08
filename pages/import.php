@@ -36,6 +36,7 @@ use mod_customcert\export\contracts\i_template_file_manager;
 use mod_customcert\export\contracts\import_form;
 
 require_login();
+require_admin();
 
 $contextid = required_param('context_id', PARAM_INT);
 

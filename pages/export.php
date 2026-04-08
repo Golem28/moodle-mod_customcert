@@ -34,6 +34,7 @@ use core\di;
 use mod_customcert\export\contracts\i_template_file_manager;
 
 require_login();
+require_admin();
 
 $tid = required_param("tid", PARAM_INT);
 
